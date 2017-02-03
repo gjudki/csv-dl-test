@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>CSV Link Test</title>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+	<style>
+
+	:root {
+	  --color: rgb(255, 0, 72);
+	}
+
+	body {
+		font-family: 'Open Sans', sans-serif;
+		font-weight: 300;
+		font-size: 16px;
+		padding:0;
+	}
+
+	.link-container {
+		text-align: center;
+		padding:200px 0;
+	}
+
+	.btn {
+		border-radius:2rem;
+		background: var(--color);
+		color: white;
+		display: inline-block;
+		padding:1rem;
+		text-decoration: none;
+
+	}
+
+	.btn:hover {
+		filter: brightness(95%);
+	}
+
+	.object-container {
+		background: var(--color);
+		padding:2rem;
+		color:white;
+		text-transform: left;
+	}
+
+
+	</style>
+</head>
+<body>
+
+
+<div class="link-container">
+	<a href="" id="CSVButton" class="btn">Generate CSV file</a>
+</div>
+<div class="object-container">
+	<pre id="data-wrapper">
+		DUMMY: asodmasoid asoidm aiod aoimd asoim asoimasoi
+	</pre>
+</div>
+
+</body>
+
+
+
+<script>
+
+console.log('werkin');
+var csvContent, encodedUri, link, dataElem;
+var TestData = [
+  {
+    "_id": "58939ed6604c8d67114a7ddc",
+    "age": 40,
+    "eyeColor": "blue",
+    "name": "Morse Oconnor",
+    "gender": "male",
+    "company": "RODEOLOGY",
+    "email": "morseoconnor@rodeology.com",
+    "phone": "+1 (960) 514-3834"
+  },
+  {
+    "_id": "58939ed6712c694e1668a5e1",
+    "age": 24,
+    "eyeColor": "brown",
+    "name": "Tamra Poole",
+    "gender": "female",
+    "company": "ZENTILITY",
+    "email": "tamrapoole@zentility.com",
+    "phone": "+1 (807) 478-2925"
+  },
+  {
+    "_id": "58939ed6d636233a8717395b",
+    "age": 36,
+    "eyeColor": "blue",
+    "name": "Guy French",
+    "gender": "male",
+    "company": "BRISTO",
+    "email": "gayfrench@bristo.com",
+    "phone": "+1 (994) 527-2299"
+  },
+  {
+    "_id": "58939ed6acf03c85aa2747d3",
+    "age": 31,
+    "eyeColor": "green",
+    "name": "Valenzuela Bond",
+    "gender": "male",
+    "company": "CONCILITY",
+    "email": "valenzuelabond@concility.com",
+    "phone": "+1 (952) 413-2953"
+  },
+  {
+    "_id": "58939ed6fadbf1b0c30f1ced",
+    "age": 28,
+    "eyeColor": "green",
+    "name": "Tammie Murphy",
+    "gender": "female",
+    "company": "ADORNICA",
+    "email": "tammiemurphy@adornica.com",
+    "phone": "+1 (990) 552-3388"
+  },
+  {
+    "_id": "58939ed6eb294123b3c58348",
+    "age": 28,
+    "eyeColor": "blue",
+    "name": "Mays Hendrix",
+    "gender": "male",
+    "company": "GENEKOM",
+    "email": "mayshendrix@genekom.com",
+    "phone": "+1 (937) 434-3989"
+  },
+  {
+    "_id": "58939ed6c773ab4786908135",
+    "age": 38,
+    "eyeColor": "brown",
+    "name": "Weiss Barrett",
+    "gender": "male",
+    "company": "MULTIFLEX",
+    "email": "weissbarrett@multiflex.com",
+    "phone": "+1 (849) 430-2527"
+  },
+  {
+    "_id": "58939ed6024c571b2908fe40",
+    "age": 23,
+    "eyeColor": "brown",
+    "name": "Houston Lawson",
+    "gender": "male",
+    "company": "RADIANTIX",
+    "email": "houstonlawson@radiantix.com",
+    "phone": "+1 (929) 519-2920"
+  }
+];
+var csvObject = {
+	data: TestData,
+	prefix: 'data:attachment/csv;charset=UTF-8',
+	delimeter: ',',
+	newLine: '\n'
+};
+
+function createCSVString(arr){
+	var csvString, keys, headers, prefix, delimeter, newLine;
+	csvString = '';
+	data = arr.data;
+	prefix = arr.prefix;
+	delimeter = arr.delimeter;
+	newLine = arr.newLine;
+
+	keys = Object.keys(data[0]);
+	csvString += prefix + delimeter;
+
+	for(var i = 0, len = keys.length; i < len; i++){
+
+		csvString += keys[i];
+
+		if(i !== (len - 1)){
+			csvString += delimeter;
+		}
+	}
+
+	csvString += newLine;
+
+	for(var j = 0, len = data.length; j < len; j++){
+
+		for(var key in data[j]){
+			if (data[j].hasOwnProperty(key)){
+				csvString += data[j][key];
+			}
+			if(key !== keys[(keys.length - 1)]){
+				csvString += delimeter;
+			}
+		}
+		csvString += newLine;
+	}
+	return csvString;
+}
+
+// LINK
+csvContent = createCSVString(csvObject);
+encodedUri = encodeURI(csvContent);
+link = document.getElementById("CSVButton");
+link.setAttribute("href", encodedUri);
+link.setAttribute("download", "my_data.csv");
+
+// DATA VIEW
+dataElem = document.getElementById("data-wrapper");
+dataElem.innerHTML = JSON.stringify(TestData, null, 4);
+
+</script>
+
+
+</html>
