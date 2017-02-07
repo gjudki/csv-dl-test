@@ -6,15 +6,16 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
 	<style>
 
-	:root {
-	  --color: rgb(255, 0, 72);
-	}
-
 	body {
 		font-family: 'Open Sans', sans-serif;
 		font-weight: 300;
 		font-size: 16px;
 		padding:0;
+	}
+
+	/* These don't get picked up by IE, which is just a handy way to differentiate while testing. Take that Modernizr! */
+	:root {
+		--color: rgb(244, 66, 119);
 	}
 
 	.link-container {
@@ -24,6 +25,7 @@
 
 	.btn {
 		border-radius:2rem;
+		background: #0078D7;
 		background: var(--color);
 		color: white;
 		display: inline-block;
@@ -37,6 +39,7 @@
 	}
 
 	.object-container {
+		background: #0078D7;
 		background: var(--color);
 		padding:2rem;
 		color:white;
@@ -51,6 +54,7 @@
 
 <div class="link-container">
 	<a href="" id="CSVButton" class="btn">Generate CSV file</a>
+	<a href="test.csv" class="btn">Link to CSV file</a>
 </div>
 <div class="object-container">
 	<pre id="data-wrapper">
@@ -150,13 +154,13 @@ var TestData = [
 ];
 var csvObject = {
 	data: TestData,
-	prefix: 'data:attachment/csv;charset=UTF-8',
+	prefix: 'data:text/csv;charset=UTF-8,%EF%BB%BF',
 	delimeter: ',',
 	newLine: '\n'
 };
 
 function createCSVString(arr){
-	var csvString, keys, headers, prefix, delimeter, newLine;
+	var csvString, keys, headers, prefix, delimeter, newLine, timestamp;
 	csvString = '';
 	data = arr.data;
 	prefix = arr.prefix;
@@ -193,11 +197,19 @@ function createCSVString(arr){
 }
 
 // LINK
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
+}
+
+timestamp = Date.now();
 csvContent = createCSVString(csvObject);
+console.log('non encoded: ', csvContent);
 encodedUri = encodeURI(csvContent);
+console.log('encoded: ', encodedUri);
+
 link = document.getElementById("CSVButton");
 link.setAttribute("href", encodedUri);
-link.setAttribute("download", "my_data.csv");
+link.setAttribute("download", "data_" + timestamp + ".csv");
 
 // DATA VIEW
 dataElem = document.getElementById("data-wrapper");
