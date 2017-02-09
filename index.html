@@ -63,13 +63,8 @@
 </div>
 
 </body>
-
-
-
 <script>
 
-console.log('werkin');
-var csvContent, encodedUri, link, dataElem;
 var TestData = [
   {
     "_id": "58939ed6604c8d67114a7ddc",
@@ -152,24 +147,49 @@ var TestData = [
     "phone": "+1 (929) 519-2920"
   }
 ];
+
 var csvObject = {
 	data: TestData,
-	prefix: 'data:text/csv;charset=UTF-8,%EF%BB%BF',
 	delimeter: ',',
 	newLine: '\n'
 };
 
-function createCSVString(arr){
-	var csvString, keys, headers, prefix, delimeter, newLine, timestamp;
+var someIE = msieversion(),
+	link = document.getElementById("CSVButton"),
+	timestamp = Date.now(),
+	csvContent = createCSVString(csvObject);
+
+// LINK
+if (!Date.now) {
+    Date.now = function() { return new Date().getTime(); }
+}
+
+// Set Link props in DOM
+if(someIE){
+	link.onclick = function(){
+		ieClickHandler(csvContent);
+	};
+	link.setAttribute("href", '#');
+} else {
+	encodedURI = encodeURI("data:text/csv;charset=UTF-8,%EF%BB%BF," + csvContent);
+	link = document.getElementById("CSVButton");
+	link.setAttribute("href", encodedURI);
+	link.setAttribute("download", "data_" + timestamp + ".csv");
+}
+
+// DATA VIEW
+dataElem = document.getElementById("data-wrapper");
+dataElem.innerHTML = JSON.stringify(TestData, null, 4);
+
+// METHODS
+function createCSVString(obj){
+	var csvString, keys, headers, delimeter, newLine, timestamp, data;
 	csvString = '';
-	data = arr.data;
-	prefix = arr.prefix;
-	delimeter = arr.delimeter;
-	newLine = arr.newLine;
-
+	console.log(obj);
+	data = obj.data;
+	delimeter = obj.delimeter;
+	newLine = obj.newLine;
 	keys = Object.keys(data[0]);
-	csvString += prefix + delimeter;
-
 	for(var i = 0, len = keys.length; i < len; i++){
 
 		csvString += keys[i];
@@ -196,24 +216,29 @@ function createCSVString(arr){
 	return csvString;
 }
 
-// LINK
-if (!Date.now) {
-    Date.now = function() { return new Date().getTime(); }
+function msieversion() {
+    var ua = window.navigator.userAgent;
+    var msie = ua.indexOf("MSIE");
+	var edge = ua.indexOf("Edge");
+
+	console.log(msie, ' : ', edge);
+
+    if (msie > 0 || edge > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  {
+        return true;
+    } else {
+        return false;
+    }
 }
 
-timestamp = Date.now();
-csvContent = createCSVString(csvObject);
-console.log('non encoded: ', csvContent);
-encodedUri = encodeURI(csvContent);
-console.log('encoded: ', encodedUri);
+function ieClickHandler(content){
+	alert('IE CLICK');
+	var IEwindow = window.open();
+	IEwindow.document.write('sep=,\r\n' + content);
+	IEwindow.document.close();
+	IEwindow.document.execCommand('SaveAs', true, fileName + ".csv");
+	IEwindow.close();
+}
 
-link = document.getElementById("CSVButton");
-link.setAttribute("href", encodedUri);
-link.setAttribute("download", "data_" + timestamp + ".csv");
-
-// DATA VIEW
-dataElem = document.getElementById("data-wrapper");
-dataElem.innerHTML = JSON.stringify(TestData, null, 4);
 
 </script>
 
