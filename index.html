@@ -231,12 +231,11 @@ function msieversion() {
 }
 
 function ieClickHandler(content){
-	alert('IE CLICK');
 	var IEwindow = window.open();
 	IEwindow.document.write('sep=,\r\n' + content);
-	IEwindow.document.close();
-	IEwindow.document.execCommand('SaveAs', true, fileName + ".csv");
-	IEwindow.close();
+	//IEwindow.document.close();
+	IEwindow.document.execCommand('SaveAs', true, "data_" + timestamp + ".csv");
+	//IEwindow.close();
 }
 
 

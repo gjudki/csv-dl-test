@@ -9,13 +9,24 @@ https://github.com/gjudki/csv-dl-test
 
 ## Browser support
 
-This works just fine... pretty much everywhere but IE. IE only supports data URIs in JS and CSS, not HTML (as a link for example). I was hoping to get around that by navigating to the URI directly with JS, but so far, i haven't been able to get that to work. If IE is important to us (and I think it is), then there a number of JS libraries that assist with this kind of thing:
+This works just fine... pretty much everywhere but IE, Edge, and Safari. IE only supports data URIs in JS and CSS, not HTML (as a link for example). I manages to get around it with a little bit of JS trickery and the "execCommand()" API, it is possible that different OS versions will handle that differently.
+- Chrome: working as expected
+- Firefox: working as expected
+- Safari: Opens up CSV in tab, does not download. Sort of works if user: right click on link -> download linked file as
+- IE11: seems to work, with work around in code
+- Edge: opens file with work around, but does not save it
+
+If IE is important to us (and I think it is), then there a number of JS libraries that assist with this kind of thing:
 - Downloadify: https://github.com/dcneiner/Downloadify
 - download.js: http://danml.com/download.html
 
 Info about Data URIs:
 
 https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs
+
+## Drawbacks
+- Different browsers support Data URIs differently. IE does not support them at all, and requires a slightly different method.
+- Data URIs potentially have a character limit, depending on the browser.
 
 ## Conclusion
 
