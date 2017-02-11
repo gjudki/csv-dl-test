@@ -2,7 +2,7 @@
 
 ## Approach
 
-This library uses some methods from SWF Object to create and download a file. IT also requires a static image file for it's four states. Interesting.
+This library uses some methods from SWF Object to create and download a file. It also requires a static image file for its four states. Interesting.
 
 ## Test code
 https://github.com/gjudki/csv-dl-test
