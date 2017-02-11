@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>CSV Link Test</title>
+	<script src="Downloadify/js/downloadify.min.js"></script>
+	<script src="Downloadify/js/swfobject.js"></script>
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
 	<style>
 
@@ -54,7 +56,6 @@
 
 <div class="link-container">
 	<a href="" id="CSVButton" class="btn">Generate CSV file</a>
-	<a href="test.csv" class="btn">Link to CSV file</a>
 </div>
 <div class="object-container">
 	<pre id="data-wrapper">
@@ -165,17 +166,35 @@ if (!Date.now) {
 }
 
 // Set Link props in DOM
-if(someIE){
-	link.onclick = function(){
-		ieClickHandler(csvContent);
-	};
-	link.setAttribute("href", '#');
-} else {
-	encodedURI = encodeURI("data:text/csv;charset=UTF-8,%EF%BB%BF," + csvContent);
-	link = document.getElementById("CSVButton");
-	link.setAttribute("href", encodedURI);
-	link.setAttribute("download", "data_" + timestamp + ".csv");
-}
+
+encodedURI = encodeURI("data:text/csv;charset=UTF-8,%EF%BB%BF," + csvContent);
+link = document.getElementById("CSVButton");
+
+
+////// Downloadify
+
+Downloadify.create( link, {
+	filename: function(){
+		return 'secret-message.txt'; //static file -- you could retrieve from form input box
+	},
+	data: function(){
+		return 'MooTools FTW!'; //static content -- you could retrieve from form input box
+	},
+	onComplete: function(){
+		alert('The file has been saved!');
+	},
+	onCancel: function(){
+		alert('You have cancelled the saving of this file.');
+	},
+	onError: function(){
+		alert('Error!  Damn!');
+	},
+	swf: 'Downloadify/js/swfobject.js',
+	downloadImage: 'Downloadify/images/download.png',
+	width: '175',
+	height: '55'
+} );
+
 
 // DATA VIEW
 dataElem = document.getElementById("data-wrapper");
